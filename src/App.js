@@ -1,14 +1,14 @@
 import React from 'react';
 import noviceImg from './resources/characters/novice.jpg';
 import sorceressImg from './resources/characters/elfSorc.jpg';
+import samuraiImg from './resources/characters/samurai.jpg';
 import knightImg from './resources/characters/orcWarrior.jpg';
 import styles from './styles.module.css';
 import {Header} from './components/header/index';
 import {Subheader} from './components/subheader/index';
 import {Content} from './components/content/index';
 import useLevelUpScreen from './hooks/useLevelUpScreen';
-import { MdKeyboardTab } from 'react-icons/md'
-
+import {MdKeyboardTab} from 'react-icons/md';
 
 import cx from 'classnames';
 
@@ -18,7 +18,7 @@ const App = () => {
     if (selected.length > 0) {
       return (
         <div>
-          <MdKeyboardTab className={styles.morphArrow}/>
+          <MdKeyboardTab className={styles.morphArrow} />
           <button
             name="morph"
             type="button"
@@ -27,7 +27,24 @@ const App = () => {
           >
             Morph
           </button>
-          <MdKeyboardTab className={styles.morphArrowFlipped}/>
+          <MdKeyboardTab className={styles.morphArrowFlipped} />
+        </div>
+      );
+    }
+  };
+  const renderMorphed = () => {
+    if (morphed) {
+      return (
+        <div className={styles.morphed}>
+          <Header>Congratulations!</Header>
+          <Content>
+            <div className={styles.characterBox}>
+              <img alt="" src={samuraiImg} />
+            </div>
+          </Content>
+          <Subheader>
+            You have morphed into a <em>Sage</em>
+          </Subheader>
         </div>
       );
     }
@@ -87,6 +104,7 @@ const App = () => {
       <div className={styles.morph}>
         {renderMorphButton ()}
       </div>
+      {renderMorphed ()}
     </div>
   );
 };
