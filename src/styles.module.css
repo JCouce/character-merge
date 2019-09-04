@@ -128,6 +128,28 @@ body {
   opacity: 0;
 }
 
+button.morph {
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  border-radius: 25px;
+  padding: 14px 22px;
+  color: #fff;
+  background: rgb(35, 153, 147);
+  border: 1px solid #fff;
+  font-family: Patua One, sans-serif;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 20px;
+}
+
+button.morph:hover {
+  background: none;
+  border: 1px solid rgb(35, 153, 147);
+  color: rgb(35, 153, 147);
+}
+
+
 @keyframes flashfade {
   0% {
     opacity: 0;
@@ -138,4 +160,22 @@ body {
   100% {
     opacity: 1;
   }
+}
+
+.next {
+  text-align: center;
+  margin: 35px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.next p {
+  font-family: Patua One, sans-serif;
+  font-weight: 300;
+  text-align: center;
+  color: #fff;
+}
+
+.hidden {
+  visibility: hidden;
 }

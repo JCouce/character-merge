@@ -1,23 +1,63 @@
 import React from 'react';
+//Character images
 import noviceImg from './resources/characters/novice.jpg';
 import sorceressImg from './resources/characters/elfSorc.jpg';
 import samuraiImg from './resources/characters/samurai.jpg';
 import knightImg from './resources/characters/orcWarrior.jpg';
+//Styles
 import styles from './styles.module.css';
-import {Header} from './components/header/index';
-import {Subheader} from './components/subheader/index';
-import {Content} from './components/content/index';
+//Components
+import { Header } from './components/header/index';
+import { Subheader } from './components/subheader/index';
+import { Content } from './components/content/index';
+import { RingLoader } from 'react-spinners'
+import { MdKeyboardTab } from 'react-icons/md';
+//Hooks
 import useLevelUpScreen from './hooks/useLevelUpScreen';
-import {MdKeyboardTab} from 'react-icons/md';
-
+//Libs
+import scrollToComponent from 'react-scroll-to-component';
 import cx from 'classnames';
 
+
 const App = () => {
-  const {selected, onSelect, morphed, onMorph} = useLevelUpScreen ();
+  //selected state display the actions
+  //morphing state offers us a state where we can prepare stuff to recive the morphed state
+  //morphed state ends the proccess offering the user his brand new class
+  const {selected, onSelect, morphing, morphed, onMorph, ready} = useLevelUpScreen ();
+  const morphedRef = React.createRef ();
+  const morphRef = React.createRef ();
+
+  //Scroll to component morph button
+  React.useEffect (() => {
+    if (selected && ready) {
+      scrollToComponent (morphRef.current, {
+        offset: 300,
+        align: 'bottom',
+        duration: 1000,
+      });
+    }
+  });
+
+  //Scroll to component new morphed class
+  React.useEffect (() => {
+      if (morphed) {
+        scrollToComponent (morphedRef.current, {
+          offset: 100,
+          align: 'middle',
+          duration: 1000,
+        });
+      }
+    },[morphed, morphedRef]);
+
   const renderMorphButton = () => {
     if (selected.length > 0) {
       return (
-        <div>
+        <div
+          ref={morphRef}
+          className={cx (styles.morph, {
+            [styles.hidden]: !selected.length,
+          })}
+        >
           <MdKeyboardTab className={styles.morphArrow} />
           <button
             name="morph"
@@ -25,7 +65,7 @@ const App = () => {
             className={styles.morph}
             onClick={onMorph}
           >
-            Morph
+            {morphing ? 'Morphing...' : 'Morph'}
           </button>
           <MdKeyboardTab className={styles.morphArrowFlipped} />
         </div>
@@ -35,15 +75,20 @@ const App = () => {
   const renderMorphed = () => {
     if (morphed) {
       return (
-        <div className={styles.morphed}>
-          <Header>Congratulations!</Header>
+        <div
+          className={cx ({
+            [styles.morphed]: morphed,
+            [styles.hidden]: !morphed,
+          })}
+        >
+          <Header>Yeah!</Header>
           <Content>
-            <div className={styles.characterBox}>
+            <div ref={morphedRef} className={styles.characterBox}>
               <img alt="" src={samuraiImg} />
             </div>
           </Content>
           <Subheader>
-            You have morphed into a <em>Sage</em>
+            Has recibido la clase <em>Samurai</em>
           </Subheader>
         </div>
       );
@@ -53,17 +98,17 @@ const App = () => {
   return (
     <div className={styles.root}>
       <Header>
-        You are a <em>Novice</em>
+        Eres un <em>Novato</em>
       </Header>
       <Content>
         <div className={styles.characterBox} style={{width: 200, height: 150}}>
           <img alt="" src={noviceImg} />
         </div>
       </Content>
-      <Subheader>Congratulations on reaching level 10!</Subheader>
+      <Subheader>Has desbloqueado una nueva clase!</Subheader>
       <div style={{margin: '25px auto'}}>
-        <Header>Choose your destiny</Header>
-        <Subheader>Choose one. Or all, if you know what I mean.</Subheader>
+        <Header>Elige tu puto destino</Header>
+        <Subheader>Tus decisiones forjarán la persona que serás en el futuro!</Subheader>
         <Content>
           <div
             //cx Usage:
@@ -75,7 +120,7 @@ const App = () => {
               [styles.selectedBox]: selected.includes ('Sorceress'),
             })}
           >
-            <h2>Sorceress</h2>
+            <h2>Hechicero</h2>
             <img
               alt=""
               src={sorceressImg}
@@ -90,7 +135,7 @@ const App = () => {
               [styles.selectedBox]: selected.includes ('Knight'),
             })}
           >
-            <h2>Knight</h2>
+            <h2>Guerrero Orco</h2>
             <img
               alt=""
               src={knightImg}
@@ -103,8 +148,18 @@ const App = () => {
       </div>
       <div className={styles.morph}>
         {renderMorphButton ()}
+        <div
+          className={cx(styles.next, {
+          [styles.hidden]: ready})}
+        >
+          <div>
+            <RingLoader size={60} color="rgb(213, 202, 255)" loading />
+            <p>Loading...</p>
+          </div>
+        </div>
       </div>
       {renderMorphed ()}
+      {morphed && <div style={{height: '30vh'}} />}
     </div>
   );
 };
